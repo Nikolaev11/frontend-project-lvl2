@@ -1,0 +1,33 @@
+name: Super-Linter
+
+# Run this workflow every time a new commit pushed to your repository
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # The type of machine to run the job on
+    strategy:
+      matrix: # Node versions list
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: npm install
+        # Install project
+        run: |
+          make install
+        # Add environment variables
+        env:
+          CI: true
+      - name: Run linter
+        # Run Linter
+        run: |
+          make lint
+      - name: Run tests
+        # Run tests
+        run: |
+        NODE_OPTIONS=--experimental-vm-modules npx jest
