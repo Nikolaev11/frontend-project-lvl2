@@ -9,7 +9,7 @@
   "description": "gendiff",
   "main": "bin/index.js",
   "scripts": {
-    "test": "__tests__/index.test.js"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
   },
   "repository": {
     "type": "git",
