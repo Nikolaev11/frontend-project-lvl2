@@ -9,7 +9,7 @@
   "description": "gendiff",
   "main": "bin/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "__tests__/index.test.js"
   },
   "repository": {
     "type": "git",
