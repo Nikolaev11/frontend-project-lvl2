@@ -37,5 +37,5 @@ export const genDiff = (inp1, inp2) => {
     }
     return acc;
   }, []);
-  return `{\n  ${arr.join('\n  ')}\n}\n`;
+  return `{\n  ${arr.join('\n  ')}\n}`;
 };
