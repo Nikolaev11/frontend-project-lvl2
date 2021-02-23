@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "jest": {
-  "testEnvironment": "node",
-  "transform": {}
-},
+    "testEnvironment": "node",
+    "transform": {}
+  },
   "description": "gendiff",
   "main": "bin/index.js",
   "scripts": {
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/Nikolaev11/frontend-project-lvl2#readme",
   "dependencies": {
     "commander": "^7.0.0",
+    "js-yaml": "^4.0.0",
     "lodash": "^4.17.20"
   },
   "devDependencies": {

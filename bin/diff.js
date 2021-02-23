@@ -1,22 +1,6 @@
 import _ from 'lodash';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import path, { dirname } from 'path';
 
-export const readJsonSynchronic = (inputPath) => {
-  try {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-    const getFixturePath = (filename) => path.join(__dirname, filename);
-    const content = fs.readFileSync(getFixturePath(inputPath), 'utf8');
-    return content;
-  } catch (e) {
-    console.log(e);
-  }
-  return false;
-};
-
-export const genDiff = (inp1, inp2) => {
+const diff = (inp1, inp2) => {
   const inputKeysArray = _.sortBy(_.uniq([...Object.keys(inp1), ...Object.keys(inp2)], 'A'));
   // console.log(inputKeysArray);
   const arr = inputKeysArray.reduce((acc, key) => {
@@ -39,3 +23,5 @@ export const genDiff = (inp1, inp2) => {
   }, []);
   return `{\n  ${arr.join('\n  ')}\n}`;
 };
+
+export default diff;
