@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import selectFormatter from '../formatters/index.js';
 
 function Stabled(key, value) {
   this.type = 'stabled';
@@ -42,7 +43,7 @@ function Updated(key, value1, value2) {
   }
 }
 
-const diff = (input1, input2) => {
+export const diff = (input1, input2) => {
   function Differed(key, value1, value2) {
     this.type = 'stabled';
     this.key = key;
@@ -81,4 +82,7 @@ const diff = (input1, input2) => {
   return inputKeysArray.reduce(diffReducer, []);
 };
 
-export default diff;
+export default (input1, input2, format) => {
+  const formatter = selectFormatter(format);
+  return formatter(diff(input1, input2));
+};
