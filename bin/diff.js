@@ -1,77 +1,84 @@
 import _ from 'lodash';
 
-const diff = (inp1, inp2) => {
-  const addWithoutDiff = (obj) => {
-    if (!_.isObject(obj)) {
-      return obj;
-    }
-    const f5 = (accumulator, elem) => {
-      const [key, value] = elem;
-      if (_.isObject(value)) {
-        accumulator.push(`  ${key}:`);
-        accumulator.push(Object.entries(value).reduce(f5, []));
-      } else {
-        accumulator.push(`  ${key}: ${value}`);
-      }
-      return accumulator;
-    };
-    return Object.entries(obj).reduce(f5, []);
-  };
+function Stabled(key, value) {
+  this.type = 'stabled';
+  this.key = key;
+  if (_.isObject(value)) {
+    this.value = Object.entries(value).map(([a, b]) => new Stabled(a, b));
+  } else {
+    this.value = value;
+  }
+}
+function Removed(key, value) {
+  this.type = 'removed';
+  this.key = key;
+  if (_.isObject(value)) {
+    this.value = Object.entries(value).map(([a, b]) => new Stabled(a, b));
+  } else {
+    this.value = value;
+  }
+}
+function Added(key, value) {
+  this.type = 'added';
+  this.key = key;
+  if (_.isObject(value)) {
+    this.value = Object.entries(value).map(([a, b]) => new Stabled(a, b));
+  } else {
+    this.value = value;
+  }
+}
+function Updated(key, value1, value2) {
+  this.type = 'updated';
+  this.key = key;
+  if (_.isObject(value1)) {
+    this.value1 = Object.entries(value1).map(([a, b]) => new Stabled(a, b));
+  } else {
+    this.value1 = value1;
+  }
+  if (_.isObject(value2)) {
+    this.value2 = Object.entries(value2).map(([a, b]) => new Stabled(a, b));
+  } else {
+    this.value2 = value2;
+  }
+}
 
-  const f2 = (acc, key) => {
-    if (key in inp1 && key in inp2) {
-      if (_.isObject(inp1[key]) && _.isObject(inp2[key])) {
-        acc.push(`  ${key}:`);
-        acc.push(diff(inp1[key], inp2[key]));
+const diff = (input1, input2) => {
+  function Differed(key, value1, value2) {
+    this.type = 'stabled';
+    this.key = key;
+    this.value = diff(value1, value2);
+  }
+
+  const diffReducer = (acc, key) => {
+    if (key in input1 && key in input2) {
+      if (_.isObject(input1[key]) && _.isObject(input2[key])) {
+        acc.push(new Differed(key, input1[key], input2[key]));
       }
-      if (!_.isObject(inp1[key]) && _.isObject(inp2[key])) {
-        acc.push(`- ${key}: ${addWithoutDiff(inp1[key])}`);
-        acc.push(`- ${key}:`);
-        acc.push(addWithoutDiff(inp2[key]));
+      if ((!_.isObject(input1[key]) && _.isObject(input2[key]))
+      || (_.isObject(input1[key]) && !_.isObject(input2[key]))) {
+        acc.push(new Updated(key, input1[key], input2[key]));
       }
-      if (_.isObject(inp1[key]) && !_.isObject(inp2[key])) {
-        acc.push(`- ${key}:`);
-        acc.push(addWithoutDiff(inp1[key]));
-        acc.push(`+ ${key}: ${addWithoutDiff(inp2[key])}`);
-      }
-      if (!_.isObject(inp1[key]) && !_.isObject(inp2[key])) {
-        if (inp1[key] === inp2[key]) {
-          acc.push(`  ${key}: ${inp1[key]}`);
-          return acc;
+      if (!_.isObject(input1[key]) && !_.isObject(input2[key])) {
+        if (input1[key] === input2[key]) {
+          acc.push(new Stabled(key, input1[key]));
+        } else {
+          acc.push(new Updated(key, input1[key], input2[key]));
         }
-        if (key in inp1) {
-          acc.push(`- ${key}: ${inp1[key]}`);
-        }
-        if (key in inp2) {
-          acc.push(`+ ${key}: ${inp2[key]}`);
-        }
-        return acc;
       }
       return acc;
     }
-    if (key in inp1) {
-      if (_.isObject(inp1[key])) {
-        acc.push(`- ${key}:`);
-        acc.push(addWithoutDiff(inp1[key]));
-      } else {
-        acc.push(`- ${key}: ${inp1[key]}`);
-      }
+    if (key in input1) {
+      acc.push(new Removed(key, input1[key]));
     }
-    if (key in inp2) {
-      if (_.isObject(inp2[key])) {
-        acc.push(`+ ${key}:`);
-        acc.push(addWithoutDiff(inp2[key]));
-      } else {
-        acc.push(`+ ${key}: ${inp2[key]}`);
-      }
+    if (key in input2) {
+      acc.push(new Added(key, input2[key]));
     }
     return acc;
   };
 
-  const inputKeysArray = _.sortBy(_.uniq([...Object.keys(inp1), ...Object.keys(inp2)], 'A'));
+  const inputKeysArray = _.sortedUniq([...Object.keys(input1), ...Object.keys(input2)].sort());
   // console.log(inputKeysArray);
-  const arr = inputKeysArray.reduce(f2, []);
-  // console.log(arr);
-  return arr;
+  return inputKeysArray.reduce(diffReducer, []);
 };
+
 export default diff;
