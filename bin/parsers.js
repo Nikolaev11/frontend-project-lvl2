@@ -27,7 +27,7 @@ export default (inputPath) => {
   return false;
 };
 
-export const parseSynchronic = (inputPath) => {
+export const parseFileSynchronic = (inputPath) => {
   try {
     const filePath = path.isAbsolute(inputPath) ? inputPath
       : path.resolve(process.cwd(), inputPath);
