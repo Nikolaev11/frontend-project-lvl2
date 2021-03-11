@@ -11,8 +11,6 @@ program.arguments('<filepath1> <filepath2>');
 program.action((filepath1, filepath2) => {
   const input1 = parseSynchronic(filepath1);
   const input2 = parseSynchronic(filepath2);
-  // console.log('filepath1:', inputJson1);
-  // console.log('filepath2:', inputJson2);
   console.log(genDdiff(input1, input2, program.opts().format));
 });
 

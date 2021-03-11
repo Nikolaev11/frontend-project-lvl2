@@ -1,46 +1,41 @@
 import _ from 'lodash';
 import selectFormatter from '../formatters/index.js';
 
+const createValue = (object) => {
+  function StabledChildren(key, value) {
+    this.type = 'stabled';
+    this.key = key;
+    this.value = createValue(value);
+  }
+  if (_.isObject(object)) {
+    return Object.entries(object).map(([a, b]) => new StabledChildren(a, b));
+  }
+  return object;
+};
+
 function Stabled(key, value) {
   this.type = 'stabled';
   this.key = key;
-  if (_.isObject(value)) {
-    this.value = Object.entries(value).map(([a, b]) => new Stabled(a, b));
-  } else {
-    this.value = value;
-  }
+  this.value = createValue(value);
 }
+
 function Removed(key, value) {
   this.type = 'removed';
   this.key = key;
-  if (_.isObject(value)) {
-    this.value = Object.entries(value).map(([a, b]) => new Stabled(a, b));
-  } else {
-    this.value = value;
-  }
+  this.value = createValue(value);
 }
+
 function Added(key, value) {
   this.type = 'added';
   this.key = key;
-  if (_.isObject(value)) {
-    this.value = Object.entries(value).map(([a, b]) => new Stabled(a, b));
-  } else {
-    this.value = value;
-  }
+  this.value = createValue(value);
 }
+
 function Updated(key, value1, value2) {
   this.type = 'updated';
   this.key = key;
-  if (_.isObject(value1)) {
-    this.value1 = Object.entries(value1).map(([a, b]) => new Stabled(a, b));
-  } else {
-    this.value1 = value1;
-  }
-  if (_.isObject(value2)) {
-    this.value2 = Object.entries(value2).map(([a, b]) => new Stabled(a, b));
-  } else {
-    this.value2 = value2;
-  }
+  this.value1 = createValue(value1);
+  this.value2 = createValue(value2);
 }
 
 export const diff = (input1, input2) => {
