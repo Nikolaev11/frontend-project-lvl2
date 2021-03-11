@@ -6,6 +6,7 @@ import parseSynchronic from '../bin/parsers.js';
 const inputJson1 = parseSynchronic('../__fixtures__/file1.json');
 const inputJson2 = parseSynchronic('../__fixtures__/file2.json');
 const inputYaml1 = parseSynchronic('../__fixtures__/file1.yml');
+
 const inputYaml2 = parseSynchronic('../__fixtures__/file2.yml');
 const expectedStylish = parseSynchronic('../__fixtures__/stylish_expected_file.txt');
 const expectedPlain = parseSynchronic('../__fixtures__/plain_expected_file.txt');

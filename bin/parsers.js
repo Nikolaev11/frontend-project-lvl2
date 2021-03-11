@@ -6,6 +6,7 @@ import yaml from 'js-yaml';
 const parseSynchronic = (inputPath) => {
   try {
     const __filename = fileURLToPath(import.meta.url);
+
     const __dirname = dirname(__filename);
     const getFixturePath = (filename) => path.join(__dirname, filename);
     const content = fs.readFileSync(getFixturePath(inputPath), 'utf8');
