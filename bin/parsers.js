@@ -3,29 +3,37 @@ import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 import yaml from 'js-yaml';
 
-const parseSynchronic = (inputPath) => {
+const parserData = (filePath) => {
+  const content = fs.readFileSync(filePath, 'utf8');
+  switch (path.extname(filePath)) {
+    case '.json':
+      return JSON.parse(content);
+    case '.yml':
+      return yaml.load(content);
+    default:
+      return content;
+  }
+};
+
+export const parseSynchronicForTest = (inputPath) => {
   try {
     const __filename = fileURLToPath(import.meta.url);
-
     const __dirname = dirname(__filename);
-    const getFixturePath = (filename) => path.join(__dirname, filename);
-    const content = fs.readFileSync(getFixturePath(inputPath), 'utf8');
-    let parsedData;
-    switch (path.extname(inputPath)) {
-      case '.json':
-        parsedData = JSON.parse(content);
-        break;
-      case '.yml':
-        parsedData = yaml.load(content);
-        break;
-      default:
-        return content;
-    }
-    return parsedData;
+    const getFilePath = (filename) => path.join(__dirname, filename);
+    return parserData(getFilePath(inputPath));
   } catch (e) {
     console.log(e);
   }
   return false;
 };
 
-export default parseSynchronic;
+export const parseSynchronic = (inputPath) => {
+  try {
+    const filePath = path.isAbsolute(inputPath) ? inputPath
+      : path.resolve(process.cwd(), inputPath);
+    return parserData(filePath);
+  } catch (e) {
+    console.log(e);
+  }
+  return false;
+};

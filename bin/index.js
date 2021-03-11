@@ -2,7 +2,7 @@
 import { Command } from 'commander';
 
 import genDdiff from './diff.js';
-import parseSynchronic from './parsers.js';
+import { parseSynchronic } from './parsers.js';
 
 const program = new Command();
 program.version('0.1', '-V, --version', 'output the current version');
