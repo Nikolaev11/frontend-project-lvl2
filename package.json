@@ -2,6 +2,9 @@
   "name": "@hexlet/code",
   "version": "1.0.0",
   "type": "module",
+  "bin": {
+    "gendiff": "bin/index.js"
+  },
   "jest": {
     "testEnvironment": "node",
     "transform": {}
