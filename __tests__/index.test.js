@@ -2,7 +2,7 @@ import { diff } from '../bin/diff.js';
 import stylish from '../formatters/stylish.js';
 import plain from '../formatters/plain.js';
 import json from '../formatters/json.js';
-import { parseSynchronicForTests } from '../bin/parsers.js';
+import parseSynchronicForTests from '../bin/parsers.js';
 
 const inputJson1 = parseSynchronicForTests('../__fixtures__/file1.json');
 const inputJson2 = parseSynchronicForTests('../__fixtures__/file2.json');

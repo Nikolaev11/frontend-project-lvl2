@@ -15,7 +15,7 @@ const parserData = (filePath) => {
   }
 };
 
-export const parseSynchronicForTests = (inputPath) => {
+export default (inputPath) => {
   try {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
@@ -27,7 +27,7 @@ export const parseSynchronicForTests = (inputPath) => {
   return false;
 };
 
-export default (inputPath) => {
+export const parseSynchronic = (inputPath) => {
   try {
     const filePath = path.isAbsolute(inputPath) ? inputPath
       : path.resolve(process.cwd(), inputPath);
