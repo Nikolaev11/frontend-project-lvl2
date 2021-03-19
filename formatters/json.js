@@ -1,1 +1,1 @@
-export default (inpArr) => JSON.stringify({ type: 'root', key: 'root', value: inpArr });
+export default (data) => JSON.stringify(data); //experement
