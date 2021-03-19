@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-function Stabled(key, value) {  //массив с объекатми должен быть в АСТ
+function Stabled(key, value) {
   this.type = 'stabled';
   this.key = key;
   if (_.isObject(value)) {
@@ -33,24 +33,23 @@ function Updated(key, value1, value2) {
   if (_.isObject(value1)) {
     this.value1 = Object.entries(value1).map(([a, b]) => new Stabled(a, b));
   } else {
-    this.value1 = value1; //название
+    this.value1 = value1;
   }
   if (_.isObject(value2)) {
     this.value2 = Object.entries(value2).map(([a, b]) => new Stabled(a, b));
   } else {
-    this.value2 = value2;//название
+    this.value2 = value2;
   }
 }
-//без ифов
 
-const diff = (data1, data2) => { //именоваия
+const diff = (data1, data2) => {
   function Differed(key, value1, value2) {
     this.type = 'stabled';
     this.key = key;
     this.value = diff(value1, value2);
   }
 
-  const diffReducer = (acc, key) => {  //mapper.find => chek
+  const diffReducer = (acc, key) => {
     if (key in data1 && key in data2) {
       if (_.isObject(data1[key]) && _.isObject(data2[key])) {
         acc.push(new Differed(key, data1[key], data2[key]));
@@ -78,8 +77,6 @@ const diff = (data1, data2) => { //именоваия
   };
 
   const inputKeysArray = _.union(Object.keys(data1), Object.keys(data2)).sort();
-  // аррай убрать6 инпут убать _Union попробовать uniq
-  // console.log(inputKeysArray);
   return inputKeysArray.reduce(diffReducer, []);
 };
 
