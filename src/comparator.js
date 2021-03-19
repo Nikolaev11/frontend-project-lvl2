@@ -2,7 +2,7 @@ import path from 'path';
 import reader from './reader.js';
 import parser from './parser.js';
 import diff from './diff.js';
-import selectFormatter from '../formatters/index.js'; //fix убрать две точки
+import selectFormatter from '../formatters/index.js';
 
 export default (filepath1, filepath2, format) => {
   const fileData1 = reader(filepath1);
