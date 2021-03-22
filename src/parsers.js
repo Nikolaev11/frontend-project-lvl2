@@ -2,12 +2,12 @@ import yaml from 'js-yaml';
 
 export default (content, extension) => {
   switch (extension) {
-    case '.json':
+    case 'json':
       return JSON.parse(content);
-      // return data;
-    case '.yml':
+    case 'yml':
+    case 'yaml':
       return yaml.load(content);
     default:
-      return content;
+      return content; // выброс ошибки error
   }
 };

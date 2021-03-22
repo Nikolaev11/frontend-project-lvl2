@@ -1,13 +1,13 @@
 import _ from 'lodash';
 
-export default (inpArr) => {
-  const valueToString = (inputValue) => {
-    if (_.isObject(inputValue)) return '[complex value]';
-    if (_.isBoolean(inputValue)) return inputValue;
-    if (_.isNull(inputValue)) return 'null';
-    return `'${inputValue}'`;
-  };
+const valueToString = (inputValue) => {
+  if (_.isObject(inputValue)) return '[complex value]';
+  if (_.isBoolean(inputValue)) return inputValue;
+  if (_.isNull(inputValue)) return 'null';
+  return `'${inputValue}'`;
+};
 
+export default (inpArr) => {
   const elementPath = [];
   const plainMaper = (element) => {
     let result;

@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
-import genDdiff from '../src/comparator.js';
+import genDdiff from '../src/genDdiff.js';
 import reader from '../src/reader.js';
 
 const __filename = fileURLToPath(import.meta.url);

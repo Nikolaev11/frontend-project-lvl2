@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import program from 'commander';
-import genDdiff from '../src/comparator.js';
+import genDdiff from '../src/genDdiff.js';
 
 export default genDdiff;
 
