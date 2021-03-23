@@ -1,42 +1,44 @@
 import _ from 'lodash';
 
-const valueToString = (inputValue) => {
-  if (_.isObject(inputValue)) return '[complex value]';
-  if (_.isBoolean(inputValue)) return inputValue;
-  if (_.isNull(inputValue)) return 'null';
-  return `'${inputValue}'`;
+const valueToString = (value) => {
+  if (_.isObject(value)) return '[complex value]';
+  if (_.isBoolean(value)) return value;
+  if (_.isNull(value)) return 'null';
+  return `'${value}'`;
 };
 
-export default (inpArr) => {
-  const elementPath = [];
-  const plainMaper = (element) => {
-    let result;
-    switch (element.type) {
-      case 'stabled':
-        if (Array.isArray(element.value)) {
-          elementPath.push(element.key);
-          result = element.value.map(plainMaper);
-          elementPath.pop();
-        }
-        break;
-      case 'added':
-        elementPath.push(element.key);
-        result = `Property '${elementPath.join('.')}' was added with value: ${valueToString(element.value)}`;
-        elementPath.pop();
-        break;
-      case 'removed':
-        elementPath.push(element.key);
-        result = `Property '${elementPath.join('.')}' was removed`;
-        elementPath.pop();
-        break;
-      case 'updated':
-        elementPath.push(element.key);
-        result = `Property '${elementPath.join('.')}' was updated. From ${valueToString(element.value1)} to ${valueToString(element.value2)}`;
-        elementPath.pop();
-        break;
-      default: return null;
-    }
-    return result;
+export default (abstractSyntaxTree) => {
+  const plainMaper = (key) => {
+    const stringGenereate = (node) => {
+      const plainStrings = [
+        {
+          check: (elem) => elem.type === 'stabled' && 'children' in elem,
+          action: (elem) => elem.children.map(plainMaper([...key, elem.key])),
+        },
+        {
+          check: (elem) => elem.type === 'added' && 'children' in elem,
+          action: (elem) => `Property '${[...key, elem.key].join('.')}' was added with value: ${valueToString(elem.children)}`,
+        },
+        {
+          check: (elem) => elem.type === 'added' && 'value' in elem,
+          action: (elem) => `Property '${[...key, elem.key].join('.')}' was added with value: ${valueToString(elem.value)}`,
+        },
+        {
+          check: (elem) => elem.type === 'removed',
+          action: (elem) => `Property '${[...key, elem.key].join('.')}' was removed`,
+        },
+        {
+          check: (elem) => elem.type === 'updated',
+          action: (elem) => `Property '${[...key, elem.key].join('.')}' was updated. From ${valueToString(elem.valuePrevious)} to ${valueToString(elem.valueNext)}`,
+        },
+        {
+          check: () => true,
+          action: () => null,
+        },
+      ];
+      return plainStrings.find((b) => b.check(node)).action(node);
+    };
+    return stringGenereate;
   };
-  return _.compact(_.flattenDeep(inpArr.map(plainMaper))).join('\n');
+  return _.compact(_.flattenDeep(abstractSyntaxTree.map(plainMaper([])))).join('\n');
 };

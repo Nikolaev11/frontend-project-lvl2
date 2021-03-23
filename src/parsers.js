@@ -8,6 +8,6 @@ export default (content, extension) => {
     case 'yaml':
       return yaml.load(content);
     default:
-      return content; // выброс ошибки error
+      throw new Error('Unknown extension');
   }
 };

@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
+import fs from 'fs';
 import genDdiff from '../src/genDdiff.js';
-import reader from '../src/reader.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,9 +11,9 @@ const inputJson1 = getFilePath('../__fixtures__/file1.json');
 const inputJson2 = getFilePath('../__fixtures__/file2.json');
 const inputYaml1 = getFilePath('../__fixtures__/file1.yml');
 const inputYaml2 = getFilePath('../__fixtures__/file2.yml');
-const expectedStylish = reader(getFilePath('../__fixtures__/stylish_expected_file.txt'));
-const expectedPlain = reader(getFilePath('../__fixtures__/plain_expected_file.txt'));
-const expectedJson = reader(getFilePath('../__fixtures__/json_expected_file.txt'));
+const expectedStylish = fs.readFileSync(getFilePath('../__fixtures__/stylish_expected_file.txt'), 'utf8');
+const expectedPlain = fs.readFileSync(getFilePath('../__fixtures__/plain_expected_file.txt'), 'utf8');
+const expectedJson = fs.readFileSync(getFilePath('../__fixtures__/json_expected_file.txt'), 'utf8');
 
 test('diff stylish Json-Json', () => {
   expect(genDdiff(inputJson1, inputJson2, 'stylish')).toEqual(expectedStylish);
