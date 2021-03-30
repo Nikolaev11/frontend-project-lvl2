@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const valueToString = (value) => {
+const stringify = (value) => {
   if (_.isObject(value)) return '[complex value]';
   if (_.isBoolean(value)) return value;
   if (_.isNull(value)) return 'null';
@@ -8,37 +8,22 @@ const valueToString = (value) => {
 };
 
 export default (abstractSyntaxTree) => {
-  const plainMaper = (key) => {
-    const stringGenereate = (node) => {
-      const plainStrings = [
-        {
-          check: (elem) => elem.type === 'stabled' && 'children' in elem,
-          action: (elem) => elem.children.map(plainMaper([...key, elem.key])),
-        },
-        {
-          check: (elem) => elem.type === 'added' && 'children' in elem,
-          action: (elem) => `Property '${[...key, elem.key].join('.')}' was added with value: ${valueToString(elem.children)}`,
-        },
-        {
-          check: (elem) => elem.type === 'added' && 'value' in elem,
-          action: (elem) => `Property '${[...key, elem.key].join('.')}' was added with value: ${valueToString(elem.value)}`,
-        },
-        {
-          check: (elem) => elem.type === 'removed',
-          action: (elem) => `Property '${[...key, elem.key].join('.')}' was removed`,
-        },
-        {
-          check: (elem) => elem.type === 'updated',
-          action: (elem) => `Property '${[...key, elem.key].join('.')}' was updated. From ${valueToString(elem.valuePrevious)} to ${valueToString(elem.valueNext)}`,
-        },
-        {
-          check: () => true,
-          action: () => null,
-        },
-      ];
-      return plainStrings.find((b) => b.check(node)).action(node);
+  const plainMapper = (key) => {
+    const stringGenereate = (elem) => {
+      switch (elem.type) {
+        case 'nested':
+          return elem.children.map(plainMapper([...key, elem.key]));
+        case 'added':
+          return `Property '${[...key, elem.key].join('.')}' was added with value: ${stringify(elem.value)}`;
+        case 'removed':
+          return `Property '${[...key, elem.key].join('.')}' was removed`;
+        case 'updated':
+          return `Property '${[...key, elem.key].join('.')}' was updated. From ${stringify(elem.valuePrevious)} to ${stringify(elem.valueNext)}`;
+        default:
+          return null;
+      }
     };
     return stringGenereate;
   };
-  return _.compact(_.flattenDeep(abstractSyntaxTree.map(plainMaper([])))).join('\n');
+  return _.compact(_.flattenDeep(abstractSyntaxTree.map(plainMapper([])))).join('\n');
 };

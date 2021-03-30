@@ -1,33 +1,38 @@
+import _ from 'lodash';
+
 const levelStepIndent = '  ';
-const levelIndent1 = (treeDeep) => levelStepIndent.repeat(treeDeep * 2 - 1);
-const levelIndent2 = (treeDeep) => levelStepIndent.repeat(treeDeep * 2);
-const textSignature = {
+const levelIndent = (treeDeep) => levelStepIndent.repeat(treeDeep * 2 - 1);
+const levelIndentCloseBrace = (treeDeep) => levelStepIndent.repeat(treeDeep * 2);
+const prefix = {
   added: '+ ',
-  stabled: '  ',
+  unchanged: '  ',
   removed: '- ',
 };
 
 export default (abstractSyntaxTree) => {
-  const stylishMaper = (treeDeep) => {
+  const stringify = (node, treeDeep) => {
+    if (!_.isObject(node)) {
+      return node;
+    }
+    return `{\n${Object.entries(node).map(([key, value]) => `${levelIndent(treeDeep)}${levelStepIndent}${key}: ${stringify(value, treeDeep + 1)}`).join('\n')}\n${levelIndentCloseBrace(treeDeep - 1)}}`;
+  };
+
+  const stylishMapper = (treeDeep) => {
     const stringGenereate = (elem) => {
-      if ('value' in elem) {
-        return `${levelIndent1(treeDeep)}${textSignature[elem.type]}${elem.key}: ${elem.value}`;
+      switch (elem.type) {
+        case 'nested':
+          return `${levelIndent(treeDeep)}${prefix.unchanged}${elem.key}: {\n${elem.children.map(stylishMapper(treeDeep + 1)).join('\n')}\n${levelIndentCloseBrace(treeDeep)}}`;
+        case 'unchanged':
+        case 'added':
+        case 'removed':
+          return `${levelIndent(treeDeep)}${prefix[elem.type]}${elem.key}: ${stringify(elem.value, treeDeep + 1)}`;
+        case 'updated':
+          return `${levelIndent(treeDeep)}${prefix.removed}${elem.key}: ${stringify(elem.valuePrevious, treeDeep + 1)}\n${levelIndent(treeDeep)}${prefix.added}${elem.key}: ${stringify(elem.valueNext, treeDeep + 1)}`;
+        default:
+          throw new Error('Unknown node type');
       }
-      if ('children' in elem) {
-        return `${levelIndent1(treeDeep)}${textSignature[elem.type]}${elem.key}: {\n${elem.children.map(stylishMaper(treeDeep + 1)).join('\n')}\n${levelIndent2(treeDeep)}}`;
-      }
-      if (elem.type === 'updated') {
-        const previousAST = { key: elem.key };
-        previousAST[Array.isArray(elem.valuePrevious) ? 'children' : 'value'] = elem.valuePrevious;
-        previousAST.type = 'removed';
-        const nextAST = { key: elem.key };
-        nextAST[Array.isArray(elem.valueNext) ? 'children' : 'value'] = elem.valueNext;
-        nextAST.type = 'added';
-        return `${stringGenereate(previousAST)}\n${stringGenereate(nextAST)}`;
-      }
-      return null;
     };
     return stringGenereate;
   };
-  return `{\n${abstractSyntaxTree.map(stylishMaper(1)).join('\n')}\n}`;
+  return `{\n${abstractSyntaxTree.map(stylishMapper(1)).join('\n')}\n}`;
 };
