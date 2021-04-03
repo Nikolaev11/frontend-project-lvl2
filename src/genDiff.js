@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
-import pars from './parsers.js';
-import generateAst from './astGenerator.js';
+import parse from './parsers.js';
+import astBuild from './astBuilder.js';
 import format from './formatters/index.js';
 
 export default (filepath1, filepath2, outputFormat) => {
@@ -17,8 +17,8 @@ export default (filepath1, filepath2, outputFormat) => {
   const content2 = read(filepath2);
   const extension1 = getExtension(filepath1);
   const extension2 = getExtension(filepath2);
-  const data1 = pars(content1, extension1);
-  const data2 = pars(content2, extension2);
-  const ast = generateAst(data1, data2);
+  const data1 = parse(content1, extension1);
+  const data2 = parse(content2, extension2);
+  const ast = astBuild(data1, data2);
   return format(ast, outputFormat);
 };
