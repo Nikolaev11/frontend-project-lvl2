@@ -11,9 +11,6 @@
   },
   "description": "gendiff",
   "main": "src/genDiff.js",
-  "files": [
-  "dist"
-  ],
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
   },

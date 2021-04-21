@@ -26,8 +26,8 @@ const stylishMapper = (elem, depth) => {
     case 'updated':
       return `${getDepthPrefix(depth)}${typePrefix.removed}${elem.key}: ${stringify(elem.valuePrevious,
         depth + 1)}\n${getDepthPrefix(depth)}${typePrefix.added}${elem.key}: ${stringify(elem.valueNext, depth + 1)}`;
-    default: // убрать
-      throw new Error('Unknown node type');
+    default:
+      return '';
   }
 };
 
