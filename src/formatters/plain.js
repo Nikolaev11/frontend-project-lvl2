@@ -8,19 +8,19 @@ const stringify = (value) => {
   return `'${value}'`;
 };
 
-const plainMapper = (elem, path) => {
+const plain = (ast, key = []) => _.compact(ast.map((elem) => {
   switch (elem.type) {
     case 'nested':
-      return elem.children.map((element) => plainMapper(element, [...path, elem.key]));
+      return plain(elem.children, [...key, elem.key]);
     case 'added':
-      return `Property '${[...path, elem.key].join('.')}' was added with value: ${stringify(elem.value)}`;
+      return `Property '${[...key, elem.key].join('.')}' was added with value: ${stringify(elem.value)}`;
     case 'removed':
-      return `Property '${[...path, elem.key].join('.')}' was removed`;
+      return `Property '${[...key, elem.key].join('.')}' was removed`;
     case 'updated':
-      return `Property '${[...path, elem.key].join('.')}' was updated. From ${stringify(elem.valuePrevious)} to ${stringify(elem.valueNext)}`;
+      return `Property '${[...key, elem.key].join('.')}' was updated. From ${stringify(elem.valuePrevious)} to ${stringify(elem.valueNext)}`;
     default:
       return '';
   }
-};
+})).join('\n');
 
-export default (ast) => _.compact(ast.map((elem) => plainMapper(elem, [])).flat(Infinity)).join('\n');
+export default plain;
