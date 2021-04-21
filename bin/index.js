@@ -12,4 +12,4 @@ program.action((filepath1, filepath2) => {
   console.log(genDdiff(filepath1, filepath2, program.opts().format));
 });
 
-program.parse(); // автотесты падают здесь // входной файл не тот?
+program.parse(process.argv); // автотесты падают здесь // входной файл не тот?
