@@ -2,7 +2,7 @@
 import program from 'commander';
 import genDdiff from '../src/genDiff.js';
 
-export default genDdiff;
+// export default genDdiff;
 
 program.version('0.1', '-V, --version', 'output the current version');
 program.description('Compares two configuration files and shows a difference.', '-h, --help');
