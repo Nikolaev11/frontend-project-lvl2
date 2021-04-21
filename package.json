@@ -10,7 +10,7 @@
     "transform": {}
   },
   "description": "gendiff",
-  "main": "bin/index.js",
+  "main": "src/genDiff.js",
   "files": [
   "dist"
   ],
