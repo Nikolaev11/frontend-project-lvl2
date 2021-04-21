@@ -12,7 +12,6 @@ const plainMapper = (elem, path) => {
   switch (elem.type) {
     case 'nested':
       return elem.children.map((element) => plainMapper(element, [...path, elem.key]));
-      // возврат строки потом просто объединение
     case 'added':
       return `Property '${[...path, elem.key].join('.')}' was added with value: ${stringify(elem.value)}`;
     case 'removed':
