@@ -10,7 +10,7 @@
     "transform": {}
   },
   "description": "gendiff",
-  "main": "genDiff.js",
+  "main": "src/genDiff.js",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
   },
