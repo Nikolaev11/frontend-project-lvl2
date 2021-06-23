@@ -10,6 +10,6 @@ export default (data, outputFormat) => {
     case 'json':
       return JSON.stringify(data);
     default:
-      throw new Error('Unknown format');
+      return stylish(data);
   }
 };
