@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const astBuild = (data1, data2) => {
+const buildAst = (data1, data2) => {
   const typeMapper = [
     {
       check: (key) => _.isObject(data1[key]) && _.isObject(data2[key]),
@@ -31,8 +31,8 @@ const astBuild = (data1, data2) => {
   const keys = _.sortBy(_.union(Object.keys(data1), Object.keys(data2)));
   return keys.map((key) => typeMapper.find((elem) => elem.check(key))
     .action({
-      key, value1: data1[key], value2: data2[key], astBuilder: astBuild,
+      key, value1: data1[key], value2: data2[key], astBuilder: buildAst,
     }));
 };
 
-export default astBuild;
+export default buildAst;
