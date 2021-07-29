@@ -1,16 +1,11 @@
 import path from 'path';
 import fs from 'fs';
 import parse from './parsers.js';
-import astBuild from './astBuilder.js';
+import astBuild from './treeBuilder.js';
 import format from './formatters/index.js';
 
 export default (filepath1, filepath2, outputFormat) => {
-  const read = (filepath) => {
-    const pathResolved = path.isAbsolute(filepath) ? filepath
-      : path.resolve(process.cwd(), filepath);
-    return fs.readFileSync(pathResolved, 'utf8');
-  };
-
+  const read = (filepath) => fs.readFileSync(path.resolve(process.cwd(), filepath), 'utf8');
   const getExtension = (filepath) => path.extname(filepath).slice(1);
 
   const content1 = read(filepath1);

@@ -14,21 +14,21 @@ const stringify = (value, depth) => {
     depth + 1)}`).join('\n')}\n${defaultIndent.repeat(2 * (depth - 1))}}`;
 };
 
-const stylishMapper = (elem, depth) => {
-  switch (elem.type) {
+const stylishMapper = (element, depth) => {
+  switch (element.type) {
     case 'nested':
-      return `${getDepthPrefix(depth)}${typePrefix.unchanged}${elem.key}: {\n${elem.children
-        .map((element) => stylishMapper(element, depth + 1)).join('\n')}\n${defaultIndent.repeat(2 * depth)}}`;
+      return `${getDepthPrefix(depth)}${typePrefix.unchanged}${element.key}: {\n${element.children
+        .map((deepElement) => stylishMapper(deepElement, depth + 1)).join('\n')}\n${defaultIndent.repeat(2 * depth)}}`;
     case 'unchanged':
     case 'added':
     case 'removed':
-      return `${getDepthPrefix(depth)}${typePrefix[elem.type]}${elem.key}: ${stringify(elem.value, depth + 1)}`;
+      return `${getDepthPrefix(depth)}${typePrefix[element.type]}${element.key}: ${stringify(element.value, depth + 1)}`;
     case 'updated':
-      return `${getDepthPrefix(depth)}${typePrefix.removed}${elem.key}: ${stringify(elem.valuePrevious,
-        depth + 1)}\n${getDepthPrefix(depth)}${typePrefix.added}${elem.key}: ${stringify(elem.valueNext, depth + 1)}`;
+      return `${getDepthPrefix(depth)}${typePrefix.removed}${element.key}: ${stringify(element.oldValue,
+        depth + 1)}\n${getDepthPrefix(depth)}${typePrefix.added}${element.key}: ${stringify(element.newValue, depth + 1)}`;
     default:
       return '';
   }
 };
 
-export default (ast) => `{\n${ast.map((elem) => stylishMapper(elem, 1)).join('\n')}\n}`;
+export default (ast) => `{\n${ast.map((element) => stylishMapper(element, 1)).join('\n')}\n}`;

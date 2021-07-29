@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const buildAst = (data1, data2) => {
+const treeBuilder = (data1, data2) => {
   const typeMapper = [
     {
       check: (key) => _.isObject(data1[key]) && _.isObject(data2[key]),
@@ -23,16 +23,16 @@ const buildAst = (data1, data2) => {
     {
       check: () => true,
       action: ({ key, value1, value2 }) => ({
-        type: 'updated', key, valuePrevious: value1, valueNext: value2,
+        type: 'updated', key, oldValue: value1, newValue: value2,
       }),
     },
   ];
 
   const keys = _.sortBy(_.union(Object.keys(data1), Object.keys(data2)));
-  return keys.map((key) => typeMapper.find((elem) => elem.check(key))
+  return keys.map((key) => typeMapper.find((element) => element.check(key))
     .action({
-      key, value1: data1[key], value2: data2[key], astBuilder: buildAst,
+      key, value1: data1[key], value2: data2[key], astBuilder: treeBuilder,
     }));
 };
 
-export default buildAst;
+export default treeBuilder;
