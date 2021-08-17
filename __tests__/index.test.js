@@ -30,6 +30,9 @@ test('diff plain Json-Json', () => {
 test('diff json Json-Json', () => {
   expect(genDdiff(inputJson1, inputJson2, 'json')).toEqual(expectedJson);
 });
+test('diff default output Json-Json', () => {
+  expect(genDdiff(inputJson1, inputJson2)).toEqual(expectedStylish);
+});
 test('Unknown input type error', () => {
   expect(() => genDdiff(getFilePath('../__fixtures__/json_expected_file.txt'), inputJson2, 'json')).toThrow('Unknown type');
 });

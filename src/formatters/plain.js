@@ -8,10 +8,10 @@ const stringify = (value) => {
   return `'${value}'`;
 };
 
-const makePlain = (ast, key = []) => _.compact(ast.map((element) => {
+const formatPlain = (ast, key = []) => _.compact(ast.map((element) => {
   switch (element.type) {
     case 'nested':
-      return makePlain(element.children, [...key, element.key]);
+      return formatPlain(element.children, [...key, element.key]);
     case 'added':
       return `Property '${[...key, element.key].join('.')}' was added with value: ${stringify(element.value)}`;
     case 'removed':
@@ -23,4 +23,4 @@ const makePlain = (ast, key = []) => _.compact(ast.map((element) => {
   }
 })).join('\n');
 
-export default makePlain;
+export default formatPlain;
